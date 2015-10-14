@@ -1,8 +1,6 @@
 # Filterable
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/filterable`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Adds filter functionality to your ActiveRecord models
 
 ## Installation
 
@@ -16,13 +14,32 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install filterable
-
 ## Usage
 
-TODO: Write usage instructions here
+Include `Filterable` concern to the model you want to act as filterable:
+
+    class Posts
+      include Filterable
+    end
+
+Add scopes for each field that you want to filter by:
+
+    class Posts
+      # ...
+      scope :name, -> (name) { where(name: name) }
+      scope :author, -> (author) { where(author: author) }
+      # ...
+    end
+
+Now you can use it in you controller like that:
+
+    class PostsController
+      def index
+        @posts = Post.filter(
+          params.slice(:name, :author)
+        )
+      end
+    end
 
 ## Development
 
@@ -32,10 +49,12 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/filterable. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ImmaculatePine/filterable. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
+## Thanks
+
+I found [this article by Justin Weiss](http://www.justinweiss.com/articles/search-and-filter-rails-models-without-bloating-your-controller/) useful and decided to move it to a gem.
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
